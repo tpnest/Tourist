@@ -16,5 +16,19 @@ namespace Tourist.Services
         /// <param name="touristRouteId"></param>
         /// <returns></returns>
         TouristRoute GetTouristRoute(Guid touristRouteId);
+
+        /// <summary>
+        /// 检查路线是否存在
+        /// </summary>
+        /// <param name="touristRouteId"></param>
+        /// <returns></returns>
+        bool CheckIfTheRouteExists(Guid touristRouteId);
+
+        /// <summary>
+        /// 返回路线下的所有图片
+        /// </summary>
+        /// <param name="touristRouteId"></param>
+        /// <returns></returns>
+        IEnumerable<TouristRoutePicture> GetPictureByTouristRouteId(Guid touristRouteId);
     }
 }

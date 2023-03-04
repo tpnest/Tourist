@@ -62,5 +62,15 @@ namespace Tourist.Services
         {
             return _routes.ToList();
         }
+
+        public bool CheckIfTheRouteExists(Guid touristRouteId)
+        {
+            throw new NotImplementedException();
+        }
+
+        public IEnumerable<TouristRoutePicture> GetPictureByTouristRouteId(Guid touristRouteId)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

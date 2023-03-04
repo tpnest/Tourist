@@ -12,6 +12,18 @@ namespace Tourist.Services
             _context = context;
         }
 
+        public bool CheckIfTheRouteExists(Guid touristRouteId)
+        {
+          return  _context.TouristRoutes.Any(t => t.Id == touristRouteId);
+        }
+
+        public IEnumerable<TouristRoutePicture> GetPictureByTouristRouteId(Guid touristRouteId)
+        {
+            return _context.TouristRoutePictures
+                .Where(p => p.TouristRouteId == touristRouteId)
+                .ToList();
+        }
+
         public TouristRoute GetTouristRoute(Guid touristRouteId)
         {
             return _context.TouristRoutes.FirstOrDefault(t => t.Id == touristRouteId);
