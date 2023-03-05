@@ -9,6 +9,8 @@ namespace Tourist.Profiles
         public TouristRoutePictureProfile()
         {
             CreateMap<TouristRoutePicture, TouristRoutePictureDto>();
+
+            CreateMap<TouristRoutePictureCreateDto, TouristRoutePicture>();
         }
     }
 }

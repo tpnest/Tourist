@@ -1,3 +1,5 @@
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using Tourist.Database;
 using Tourist.Services;
@@ -10,7 +12,26 @@ builder.Services.AddControllers(opt =>
 {
     opt.ReturnHttpNotAcceptable = true;
 
-}).AddXmlDataContractSerializerFormatters();
+}).AddXmlDataContractSerializerFormatters()
+    .ConfigureApiBehaviorOptions(setupAction =>
+    {
+        setupAction.InvalidModelStateResponseFactory = context =>
+        {
+            var problemDetail = new ValidationProblemDetails(context.ModelState)
+            {
+                Type = "错误",
+                Title = "数据验证失败",
+                Status = StatusCodes.Status422UnprocessableEntity,
+                Detail = "请看详细说明",
+                Instance = context.HttpContext.Request.Path
+            };
+            problemDetail.Extensions.Add("traceId", context.HttpContext.TraceIdentifier);
+            return new UnprocessableEntityObjectResult(problemDetail)
+            {
+                ContentTypes = { "application/problem+json" }
+            };
+        };
+    });
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();

@@ -17,5 +17,9 @@ namespace Tourist.Dtos
         public string Features { get; set; }
         public string Fees { get; set; }
         public string Notes { get; set; }
+        public ICollection<TouristRoutePictureDto> TouristRoutePictures { get; set; }
+            = new List<TouristRoutePictureDto>();
+
+       
     }
 }

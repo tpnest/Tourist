@@ -1,13 +1,8 @@
-﻿using Microsoft.EntityFrameworkCore.Metadata.Internal;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.ComponentModel.DataAnnotations;
-using Tourist.Models;
-using Tourist.ValidationAttributes;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace Tourist.Dtos
 {
-    [DateCanNotExceedTheNow]
-    public class TouristRouteCreateDto:IValidatableObject
+    public class TouristRouteUpdateDto
     {
         public string Title { get; set; }
         public string Description { get; set; }

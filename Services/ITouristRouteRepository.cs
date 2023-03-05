@@ -39,6 +39,7 @@ namespace Tourist.Services
         TouristRoutePicture GetPicture(Guid touristRouteId,int pictureId);
 
         void CreateTouristRoute(TouristRoute touristRoute);
+        void CreateTouristRoutePicture(Guid touristRouteId, TouristRoutePicture picture);
 
         bool Save();
     }

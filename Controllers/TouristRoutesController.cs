@@ -26,7 +26,7 @@ namespace Tourist.Controllers
             float largeThan,
             float lessThan)
         {
-            var touristRouteFromRepo = _repository.GetTouristRoutes(keyword,largeThan,lessThan);
+            var touristRouteFromRepo = _repository.GetTouristRoutes(keyword, largeThan, lessThan);
             if (touristRouteFromRepo == null || touristRouteFromRepo.Count() <= 0)
             {
                 return NotFound("没有旅游路线");
@@ -35,7 +35,7 @@ namespace Tourist.Controllers
             return Ok(touristRoutesDto);
         }
 
-        [HttpGet("{touristRouteId}",Name = "GetTouristRouteById")]
+        [HttpGet("{touristRouteId}", Name = "GetTouristRouteById")]
         public IActionResult GetTouristRouteById(Guid touristRouteId)
         {
             var touristRouteFromRepo = _repository.GetTouristRoute(touristRouteId);
@@ -53,21 +53,43 @@ namespace Tourist.Controllers
             var touristRouteModel = _mapper.Map<TouristRoute>(routeCreateDto);
 
             _repository.CreateTouristRoute(touristRouteModel);
-            bool isSuccess =  _repository.Save();
+            bool isSuccess = _repository.Save();
 
             var touristRouteReturn = _mapper.Map<TouristRouteDto>(touristRouteModel);
 
-            if(isSuccess)
+            if (isSuccess)
             {
                 return CreatedAtRoute(
                     "GetTouristRouteById",
-                    new {touristRouteId = touristRouteReturn.Id},
+                    new { touristRouteId = touristRouteReturn.Id },
                     touristRouteReturn);
             }
             else
             {
                 return Problem("创建失败");
             }
+
+        }
+
+        [HttpPut]
+        public IActionResult UpdateTouristRoute(Guid touristRouteId, TouristRouteUpdateDto touristRouteUpdateDto)
+        {
+            if (!_repository.CheckIfTheRouteExists(touristRouteId))
+            {
+                return NotFound("旅游路线不存在");
+            }
+
+            var touristRoute = _repository.GetTouristRoute(touristRouteId);
+
+            _mapper.Map(touristRouteUpdateDto, touristRoute);
+
+            bool isSuccess = _repository.Save();
+
+            if (isSuccess)
+            {
+                return NoContent();
+            }
+            return Problem("更新失败！");
 
         }
     }

@@ -70,7 +70,22 @@ namespace Tourist.Services
              _context.Add(touristRoute);
         }
 
-        public  bool Save()
+        public void CreateTouristRoutePicture(Guid touristRouteId, TouristRoutePicture picture)
+        {
+            if(touristRouteId == Guid.Empty)
+            {
+                 throw new ArgumentNullException(nameof(touristRouteId));
+            }
+            if(picture == null)
+            {
+                throw new ArgumentNullException(nameof(picture));
+            }
+
+            picture.TouristRouteId= touristRouteId;
+            _context.TouristRoutePictures.Add(picture);
+        }
+
+        public bool Save()
         {
             return ( _context.SaveChanges() > 0);
         }

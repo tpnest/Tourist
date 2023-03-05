@@ -16,6 +16,8 @@ namespace Tourist.Profiles
             CreateMap<TouristRouteCreateDto, TouristRoute>()
                 .ForMember(des => des.Id,
                         opt => opt.MapFrom(src => Guid.NewGuid()));
+
+            CreateMap<TouristRouteUpdateDto, TouristRoute>();
         }
     }
 }
