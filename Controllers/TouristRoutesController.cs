@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Tourist.Dtos;
+using Tourist.Models;
 using Tourist.Services;
 
 namespace Tourist.Controllers
@@ -19,9 +20,13 @@ namespace Tourist.Controllers
         }
 
         [HttpGet]
-        public IActionResult GetTouristRoutes()
+        [HttpHead]
+        public IActionResult GetTouristRoutes(
+            [FromQuery] string? keyword,
+            float largeThan,
+            float lessThan)
         {
-            var touristRouteFromRepo = _repository.GetTouristRoutes();
+            var touristRouteFromRepo = _repository.GetTouristRoutes(keyword,largeThan,lessThan);
             if (touristRouteFromRepo == null || touristRouteFromRepo.Count() <= 0)
             {
                 return NotFound("没有旅游路线");
@@ -30,7 +35,7 @@ namespace Tourist.Controllers
             return Ok(touristRoutesDto);
         }
 
-        [HttpGet("{touristRouteId}")]
+        [HttpGet("{touristRouteId}",Name = "GetTouristRouteById")]
         public IActionResult GetTouristRouteById(Guid touristRouteId)
         {
             var touristRouteFromRepo = _repository.GetTouristRoute(touristRouteId);
@@ -40,6 +45,30 @@ namespace Tourist.Controllers
             }
             var touristRouteDto = _mapper.Map<TouristRouteDto>(touristRouteFromRepo);
             return Ok(touristRouteDto);
+        }
+
+        [HttpPost]
+        public IActionResult CreateTouristRoute([FromBody] TouristRouteCreateDto routeCreateDto)
+        {
+            var touristRouteModel = _mapper.Map<TouristRoute>(routeCreateDto);
+
+            _repository.CreateTouristRoute(touristRouteModel);
+            bool isSuccess =  _repository.Save();
+
+            var touristRouteReturn = _mapper.Map<TouristRouteDto>(touristRouteModel);
+
+            if(isSuccess)
+            {
+                return CreatedAtRoute(
+                    "GetTouristRouteById",
+                    new {touristRouteId = touristRouteReturn.Id},
+                    touristRouteReturn);
+            }
+            else
+            {
+                return Problem("创建失败");
+            }
+
         }
     }
 }

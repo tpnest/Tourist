@@ -8,7 +8,7 @@ namespace Tourist.Services
         /// 获得所有旅游路线
         /// </summary>
         /// <returns></returns>
-        IEnumerable<TouristRoute> GetTouristRoutes();
+        IEnumerable<TouristRoute> GetTouristRoutes(string keyword, float largeThan, float lessThan);
 
         /// <summary>
         /// 获得单个旅游路线
@@ -29,6 +29,17 @@ namespace Tourist.Services
         /// </summary>
         /// <param name="touristRouteId"></param>
         /// <returns></returns>
-        IEnumerable<TouristRoutePicture> GetPictureByTouristRouteId(Guid touristRouteId);
+        IEnumerable<TouristRoutePicture> GetPicturesByTouristRouteId(Guid touristRouteId);
+
+        /// <summary>
+        /// 获取单个图片
+        /// </summary>
+        /// <param name="pictureId"></param>
+        /// <returns></returns>
+        TouristRoutePicture GetPicture(Guid touristRouteId,int pictureId);
+
+        void CreateTouristRoute(TouristRoute touristRoute);
+
+        bool Save();
     }
 }

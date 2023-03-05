@@ -1,4 +1,5 @@
-﻿using Tourist.Database;
+﻿using System.Text.RegularExpressions;
+using Tourist.Database;
 using Tourist.Models;
 
 namespace Tourist.Services
@@ -17,7 +18,12 @@ namespace Tourist.Services
           return  _context.TouristRoutes.Any(t => t.Id == touristRouteId);
         }
 
-        public IEnumerable<TouristRoutePicture> GetPictureByTouristRouteId(Guid touristRouteId)
+        public TouristRoutePicture GetPicture(Guid touristRouteId,int pictureId)
+        {
+            return _context.TouristRoutePictures.Where(p => p.Id == pictureId && p.TouristRouteId == touristRouteId).FirstOrDefault();
+        }
+
+        public IEnumerable<TouristRoutePicture> GetPicturesByTouristRouteId(Guid touristRouteId)
         {
             return _context.TouristRoutePictures
                 .Where(p => p.TouristRouteId == touristRouteId)
@@ -29,9 +35,44 @@ namespace Tourist.Services
             return _context.TouristRoutes.FirstOrDefault(t => t.Id == touristRouteId);
         }
 
-        public IEnumerable<TouristRoute> GetTouristRoutes()
+        public IEnumerable<TouristRoute> GetTouristRoutes(string keyword,float largeThan,float lessThan)
         {
-            return _context.TouristRoutes.ToList();
+
+            IQueryable<TouristRoute> routes = _context.TouristRoutes;
+            if (!string.IsNullOrWhiteSpace(keyword))
+            {
+                keyword = keyword.Trim();
+                routes = routes.Where(r => r.Title.Contains(keyword));
+            }
+            
+            if (largeThan > 0 && lessThan > 0)
+            {
+                routes = routes.Where(r => r.DiscountPresent >= largeThan && r.DiscountPresent <= lessThan);
+            }
+            if(largeThan >0 && lessThan == 0)
+            {
+                routes = routes.Where(r => r.DiscountPresent >= largeThan);
+            }
+            if (largeThan == 0 && lessThan > 0)
+            {
+                routes = routes.Where(r => r.DiscountPresent <= lessThan);
+            }
+
+            return routes.ToList();
+        }
+
+        public  void CreateTouristRoute(TouristRoute touristRoute)
+        {
+            if(touristRoute == null)
+            {
+                throw new ArgumentNullException(nameof(touristRoute));
+            }
+             _context.Add(touristRoute);
+        }
+
+        public  bool Save()
+        {
+            return ( _context.SaveChanges() > 0);
         }
     }
 }
