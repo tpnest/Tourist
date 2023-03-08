@@ -71,7 +71,7 @@ namespace Tourist.Controllers
 
         }
 
-        [HttpPut]
+        [HttpPut("{touristRouteId}")]
         public IActionResult UpdateTouristRoute(Guid touristRouteId, TouristRouteUpdateDto touristRouteUpdateDto)
         {
             if (!_repository.CheckIfTheRouteExists(touristRouteId))
@@ -83,7 +83,7 @@ namespace Tourist.Controllers
 
             _mapper.Map(touristRouteUpdateDto, touristRoute);
 
-            bool isSuccess = _repository.Save();
+            bool isSuccess = _repository.Save(); 
 
             if (isSuccess)
             {

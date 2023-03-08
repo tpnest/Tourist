@@ -8,7 +8,7 @@ namespace Tourist.ValidationAttributes
     {
         protected override ValidationResult? IsValid(object? value, ValidationContext validationContext)
         {
-            var touristRoute = validationContext.ObjectInstance as TouristRouteCreateDto;
+            var touristRoute = validationContext.ObjectInstance as TouristRouteBaseDto;
             if (touristRoute != null)
             {
                 if (touristRoute.CreateTime > DateTime.Now)
