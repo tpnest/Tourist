@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json.Serialization;
 using Tourist.Database;
 using Tourist.Services;
 
@@ -12,7 +13,13 @@ builder.Services.AddControllers(opt =>
 {
     opt.ReturnHttpNotAcceptable = true;
 
-}).AddXmlDataContractSerializerFormatters()
+})
+    .AddNewtonsoftJson(opt =>
+    {
+        opt.SerializerSettings.ContractResolver =
+        new CamelCasePropertyNamesContractResolver();
+    })
+    .AddXmlDataContractSerializerFormatters()
     .ConfigureApiBehaviorOptions(setupAction =>
     {
         setupAction.InvalidModelStateResponseFactory = context =>

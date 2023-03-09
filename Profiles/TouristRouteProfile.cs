@@ -18,6 +18,7 @@ namespace Tourist.Profiles
                         opt => opt.MapFrom(src => Guid.NewGuid()));
 
             CreateMap<TouristRouteUpdateDto, TouristRoute>();
+            CreateMap<TouristRoute, TouristRouteUpdateDto>();
         }
     }
 }

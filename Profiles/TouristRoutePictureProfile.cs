@@ -11,6 +11,8 @@ namespace Tourist.Profiles
             CreateMap<TouristRoutePicture, TouristRoutePictureDto>();
 
             CreateMap<TouristRoutePictureCreateDto, TouristRoutePicture>();
+
+            CreateMap<TouristRoutePicture,TouristRoutePictureCreateDto>();
         }
     }
 }

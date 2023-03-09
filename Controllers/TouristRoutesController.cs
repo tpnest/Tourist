@@ -1,5 +1,7 @@
 ﻿using AutoMapper;
+using Azure;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using Tourist.Dtos;
 using Tourist.Models;
@@ -83,7 +85,7 @@ namespace Tourist.Controllers
 
             _mapper.Map(touristRouteUpdateDto, touristRoute);
 
-            bool isSuccess = _repository.Save(); 
+            bool isSuccess = _repository.Save();
 
             if (isSuccess)
             {
@@ -91,6 +93,32 @@ namespace Tourist.Controllers
             }
             return Problem("更新失败！");
 
+        }
+
+        [HttpPatch("{touristRouteId}")]
+        public IActionResult PartiallyUpdateTouristRoute(
+            [FromRoute] Guid touristRouteId,
+            [FromBody] JsonPatchDocument<TouristRouteUpdateDto> jsonPatch)
+        {
+            if (!_repository.CheckIfTheRouteExists(touristRouteId))
+            {
+                return NotFound("旅游路线不存在");
+            }
+
+            var routeFromRepo = _repository.GetTouristRoute(touristRouteId);
+            var routeToPatch = _mapper.Map<TouristRouteUpdateDto>(routeFromRepo);
+
+            // 验证数据
+            jsonPatch.ApplyTo(routeToPatch,ModelState);
+            if (!TryValidateModel(routeToPatch))
+            {
+                return ValidationProblem(ModelState);
+            }
+
+            _mapper.Map(routeToPatch, routeFromRepo);
+            _repository.Save();
+
+            return Ok(routeToPatch);
         }
     }
 }
